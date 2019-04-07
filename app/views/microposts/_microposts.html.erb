@@ -13,8 +13,19 @@
         </div>
         <div>
             <% if current_user == micropost.user %>
-                <%= link_to "Delete",micropost,method: :delete, data: {confirm:"You sure?"},class: 'btn btn-danger btn -xs' %>
+                <p></p><%= link_to "Delete",micropost,method: :delete, data: {confirm:"You sure?"},class: 'btn btn-danger btn -xs' %></p>
             <%end%>
+            <% if current_user.like?(micropost) %>
+              <%= form_for(current_user.relations.find_by(like_id: micropost.id), html: { method: :delete }) do |f| %>
+              <%= hidden_field_tag :like_id, micropost.id %>
+              <%= f.submit 'お気に入り解除', class: 'btn btn-warning btn-sm' %>
+              <% end %>
+            <% else %>
+              <%= form_for(current_user.relations.build) do |f| %>
+              <%= hidden_field_tag :like_id, micropost.id %>
+              <%= f.submit 'お気に入り登録', class: 'btn btn-primary btn-sm' %>
+              <% end %>
+            <% end %>
         </div>
       </div>
     </li>
